@@ -90,8 +90,14 @@ function! s:Before()
 endfunction
 
 function! s:Compile()
-    if b:ft ==# 'cpp'
-        call s:ShowInfo("Compile")
+    if b:ft ==# 'c'
+        call s:ShowInfo("c")
+    elseif b:ft ==# 'cpp'
+        call s:ShowInfo("cpp")
+    elseif b:ft ==# 'rust'
+        call s:ShowInfo("rust")
+    elseif b:ft ==# 'python'
+        call s:ShowInfo("python")
     endif
 endfunction
 
