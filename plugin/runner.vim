@@ -1,9 +1,9 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-03 13:07:06
+" Last Modified: 2018-03-03 21:54:11
 " Vim: enc=utf-8
 
-" Function: s:initVariable() function
+" Function: s:InitVariable() function
 " 初始化變數
 " Ref: https://github.com/scrooloose/nerdcommenter/blob/master/plugin/NERD_commenter.vim#L26
 " Args:
@@ -12,7 +12,7 @@
 "
 " Returns:
 "   1 if the var is set, 0 otherwise
-function! s:initVariable(var, value)
+function! s:InitVariable(var, value)
     if !exists(a:var)
         execute 'let ' . a:var . ' = ' . "'" . a:value . "'"
         return 1
@@ -21,19 +21,40 @@ function! s:initVariable(var, value)
 endfunction
 
 " Section: variable initialization
-call s:initVariable("g:runner_use_default_mapping", 1)
-call s:initVariable("g:runner_is_save_first", 1)
-call s:initVariable("g:runner_is_with_ale", 1)
-call s:initVariable("g:runner_print_timestamp", 1)
-call s:initVariable("g:runner_print_time_usage", 1)
-call s:initVariable("g:runner_show_info", 1)
-call s:initVariable("g:runner_run_key", "<F5>")
+call s:InitVariable("g:runner_use_default_mapping", 1)
+call s:InitVariable("g:runner_is_save_first", 1)
+call s:InitVariable("g:runner_is_with_ale", 1)
+call s:InitVariable("g:runner_print_timestamp", 1)
+call s:InitVariable("g:runner_print_time_usage", 1)
+call s:InitVariable("g:runner_show_info", 1)
+call s:InitVariable("g:runner_run_key", "<F5>")
+
+call s:InitVariable("g:runner_c_executable", "gcc")
+call s:InitVariable("g:runner_cpp_executable", "g++")
+call s:InitVariable("g:runner_rust_executable", "cargo")
+call s:InitVariable("g:runner_python_executable", "python3")
+
+call s:InitVariable("g:runner_c_options", "-std=c11")
+call s:InitVariable("g:runner_cpp_options", "-std=c++14")
+
+
+augroup comment
+    autocmd BufEnter,BufRead,BufNewFile * call s:SetUpFiletype(&filetype)
+augroup END
+
+" Function: s:SetUpFiletype(filetype) function
+" Set up filetype.
+" Args:
+"   -filetype
+function! s:SetUpFiletype(filetype)
+    let b:ft = a:filetype
+endfunction
 
 " Function: s:ShowInfo(str) function
-" 印出字串用
+" Use to print info string.
 "
 " Args:
-"   -str: 要印出的字串
+"   -str: string need to print.
 function! s:ShowInfo(str)
     if g:runner_show_info
         redraw
@@ -60,10 +81,18 @@ function! s:Before()
         let b:runner_ale_status = get(g:, 'ale_enabled', 1)
         let g:ale_enabled = 0
     endif
+    if g:runner_print_timestamp
+        silent execute "!echo -e '\033[31m' "
+        silent execute '!printf "\%35s\\n" "$(date)"'
+        silent execute "!echo -e '\033[0m'"
+        execute "!echo -e ''"
+    endif
 endfunction
 
 function! s:Compile()
-    call s:ShowInfo("Compile")
+    if b:ft ==# 'cpp'
+        call s:ShowInfo("Compile")
+    endif
 endfunction
 
 function! s:Run()
