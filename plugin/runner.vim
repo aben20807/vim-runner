@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-03 22:38:15
+" Last Modified: 2018-03-03 23:53:24
 " Vim: enc=utf-8
 
 " Function: s:InitVariable() function
@@ -23,19 +23,26 @@ endfunction
 " Section: variable initialization
 call s:InitVariable("g:runner_use_default_mapping", 1)
 call s:InitVariable("g:runner_is_save_first", 1)
-call s:InitVariable("g:runner_is_with_ale", 1)
 call s:InitVariable("g:runner_print_timestamp", 1)
 call s:InitVariable("g:runner_print_time_usage", 1)
 call s:InitVariable("g:runner_show_info", 1)
 call s:InitVariable("g:runner_run_key", "<F5>")
 
+" Section: work with other plugins
+" w0rp/ale
+call s:InitVariable("g:runner_is_with_ale", 0)
+" iamcco/markdown-preview.vim
+call s:InitVariable("g:runner_is_with_md", 0)
+
+" Section: executable settings
 call s:InitVariable("g:runner_c_executable", "gcc")
 call s:InitVariable("g:runner_cpp_executable", "g++")
 call s:InitVariable("g:runner_rust_executable", "cargo")
 call s:InitVariable("g:runner_python_executable", "python3")
 
-call s:InitVariable("g:runner_c_options", "-std=c11")
-call s:InitVariable("g:runner_cpp_options", "-std=c++14")
+" Section: compile options settings
+call s:InitVariable("g:runner_c_options", "-std=c11 -Wall")
+call s:InitVariable("g:runner_cpp_options", "-std=c++14 -Wall")
 
 
 augroup comment
@@ -66,6 +73,7 @@ function! s:ShowInfo(str)
     endif
 endfunction
 
+" Ref: http://vim.wikia.com/wiki/Automatically_create_tmp_or_backup_directories
 function s:InitTmpDir()
     let b:tmp_dir = '/tmp/vim-runner/'
     if !isdirectory(b:tmp_dir)
@@ -89,11 +97,12 @@ function! s:Before()
         let b:runner_ale_status = get(g:, 'ale_enabled', 1)
         let g:ale_enabled = 0
     endif
-    if g:runner_print_timestamp
+    if g:runner_print_timestamp && b:ft !=# 'markdown'
         silent execute "!echo -e '\033[31m' "
-        silent execute '!printf "\%35s\\n" "$(date)"'
+        silent execute '!printf "\%35s" "$(date)"'
         silent execute "!echo -e '\033[0m'"
-        if b:ft !=# 'c' && b:ft !=# 'cpp' && b:ft !=# 'rust' && b:ft !=# 'python'
+        if b:ft !=# 'c' && b:ft !=# 'cpp' && b:ft !=# 'rust'
+                    \ && b:ft !=# 'python'
             execute "!echo -e ''"
         endif
     endif
@@ -113,7 +122,10 @@ function! s:Compile()
         call s:ShowInfo("cpp")
         silent execute "!" . g:runner_cpp_executable . " " .
                     \ g:runner_cpp_options .
-                    \ " % -o /tmp/a.out"
+                    \ " % -o " .
+                    \ b:tmp_dir .
+                    \ b:tmp_name .
+                    \ ".out"
     elseif b:ft ==# 'rust'
         call s:ShowInfo("rust")
     elseif b:ft ==# 'python'
@@ -130,11 +142,25 @@ function! s:Run()
                     \ ".out"
     elseif b:ft ==# 'cpp'
         call s:ShowInfo("cpp")
-        execute "!time /tmp/a.out"
+        execute "!time " .
+                    \ b:tmp_dir .
+                    \ b:tmp_name .
+                    \ ".out"
     elseif b:ft ==# 'rust'
         call s:ShowInfo("rust")
     elseif b:ft ==# 'python'
         call s:ShowInfo("python")
+        execute "!time " .
+                    \ g:runner_python_executable .
+                    \ " %"
+    elseif b:ft ==# 'markdown'
+        " markdown preview
+        try
+            " Stop before starting and handle exception
+            execute "MarkdownPreviewStop"
+        catch /^Vim:E492:/
+            execute "MarkdownPreview"
+        endtry
     endif
 endfunction
 
