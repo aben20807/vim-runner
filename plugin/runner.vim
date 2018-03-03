@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-03 21:54:11
+" Last Modified: 2018-03-03 22:38:15
 " Vim: enc=utf-8
 
 " Function: s:InitVariable() function
@@ -66,6 +66,13 @@ function! s:ShowInfo(str)
     endif
 endfunction
 
+function s:InitTmpDir()
+    let b:tmp_dir = '/tmp/vim-runner/'
+    if !isdirectory(b:tmp_dir)
+        call mkdir(b:tmp_dir)
+    endif
+endfunction
+
 function! DoAll()
     call s:Before()
     call s:Compile()
@@ -74,6 +81,7 @@ function! DoAll()
 endfunction
 
 function! s:Before()
+    call s:InitTmpDir()
     if g:runner_is_save_first
         execute "up"
     endif
@@ -85,15 +93,27 @@ function! s:Before()
         silent execute "!echo -e '\033[31m' "
         silent execute '!printf "\%35s\\n" "$(date)"'
         silent execute "!echo -e '\033[0m'"
-        execute "!echo -e ''"
+        if b:ft !=# 'c' && b:ft !=# 'cpp' && b:ft !=# 'rust' && b:ft !=# 'python'
+            execute "!echo -e ''"
+        endif
     endif
 endfunction
 
 function! s:Compile()
+    let b:tmp_name = strftime("%s")
     if b:ft ==# 'c'
-        call s:ShowInfo("c")
+        call s:ShowInfo(b:tmp_name)
+        silent execute "!" . g:runner_c_executable . " " .
+                    \ g:runner_c_options .
+                    \ " % -o " .
+                    \ b:tmp_dir .
+                    \ b:tmp_name .
+                    \ ".out"
     elseif b:ft ==# 'cpp'
         call s:ShowInfo("cpp")
+        silent execute "!" . g:runner_cpp_executable . " " .
+                    \ g:runner_cpp_options .
+                    \ " % -o /tmp/a.out"
     elseif b:ft ==# 'rust'
         call s:ShowInfo("rust")
     elseif b:ft ==# 'python'
@@ -102,7 +122,20 @@ function! s:Compile()
 endfunction
 
 function! s:Run()
-
+    if b:ft ==# 'c'
+        call s:ShowInfo("c")
+        execute "!time " .
+                    \ b:tmp_dir .
+                    \ b:tmp_name .
+                    \ ".out"
+    elseif b:ft ==# 'cpp'
+        call s:ShowInfo("cpp")
+        execute "!time /tmp/a.out"
+    elseif b:ft ==# 'rust'
+        call s:ShowInfo("rust")
+    elseif b:ft ==# 'python'
+        call s:ShowInfo("python")
+    endif
 endfunction
 
 function! s:After()
