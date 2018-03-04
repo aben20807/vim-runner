@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-04 12:08:33
+" Last Modified: 2018-03-04 12:22:22
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -145,15 +145,22 @@ function! s:Compile()
 endfunction
 
 function! s:Run()
+    if g:runner_print_time_usage
+        let l:time = "time"
+    else
+        let l:time = ""
+    endif
     if b:ft ==# 'c'
         call s:ShowInfo("c")
-        execute "!time " .
+        execute "!" .
+                    \ l:time . " "
                     \ b:tmp_dir .
                     \ b:tmp_name .
                     \ ".out"
     elseif b:ft ==# 'cpp'
         call s:ShowInfo("cpp")
-        execute "!time " .
+        execute "!" .
+                    \ l:time . " "
                     \ b:tmp_dir .
                     \ b:tmp_name .
                     \ ".out"
@@ -161,7 +168,8 @@ function! s:Run()
         call s:ShowInfo("rust")
     elseif b:ft ==# 'python'
         call s:ShowInfo("python")
-        execute "!time " .
+        execute "!" .
+                    \ l:time . " "
                     \ g:runner_python_executable .
                     \ " %"
     elseif b:ft ==# 'markdown'
