@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-04 13:35:18
+" Last Modified: 2018-03-04 13:40:24
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -14,6 +14,7 @@ let has_loaded_runner = 1
 
 set shell=/bin/sh
 set shellcmdflag=-c
+
 
 " Function: s:InitVariable() function
 " 初始化變數
@@ -63,6 +64,7 @@ augroup comment
     autocmd BufEnter,BufRead,BufNewFile * call s:SetUpFiletype(&filetype)
 augroup END
 
+
 " Function: s:SetUpFiletype(filetype) function
 " Set up filetype.
 " Args:
@@ -78,6 +80,7 @@ function! s:SetUpFiletype(filetype)
     endfor
     let b:supported = 0
 endfunction
+
 
 " Function: s:ShowInfo(str) function
 " Use to print info string.
@@ -95,15 +98,17 @@ function! s:ShowInfo(str)
     endif
 endfunction
 
+
 " Ref: http://vim.wikia.com/wiki/Automatically_create_tmp_or_backup_directories
-function s:InitTmpDir()
+function! s:InitTmpDir()
     let b:tmp_dir = g:runner_tmp_dir
     if !isdirectory(b:tmp_dir)
         call mkdir(b:tmp_dir)
     endif
 endfunction
 
-function! DoAll()
+
+function! s:DoAll()
     if b:supported
         call s:Before()
         call s:Compile()
@@ -113,6 +118,7 @@ function! DoAll()
         call s:ShowInfo("   ❖  不支援  ❖ ")
     endif
 endfunction
+
 
 function! s:Before()
     call s:InitTmpDir()
@@ -134,6 +140,7 @@ function! s:Before()
         endif
     endif
 endfunction
+
 
 function! s:Compile()
     let b:tmp_name = strftime("%s")
@@ -159,6 +166,7 @@ function! s:Compile()
         call s:ShowInfo("python")
     endif
 endfunction
+
 
 function! s:Run()
     if g:runner_print_time_usage
@@ -199,6 +207,7 @@ function! s:Run()
     endif
 endfunction
 
+
 function! s:After()
     if (b:ft ==# 'c' || b:ft ==# 'cpp') && g:runner_auto_remove_tmp
         silent execute "!rm " .
@@ -211,6 +220,11 @@ function! s:After()
     endif
 endfunction
 
-" display date, compile and run
-map <F5> :call DoAll()<CR>
-" map <F5> :call CompileAndRun()<CR>
+
+" Section: key map設定
+function! s:SetUpKeyMap()
+    execute "nnoremap <silent> ".g:runner_run_key." :<C-u>call <SID>DoAll()<CR>"
+endfunction
+if g:runner_use_default_mapping
+    call s:SetUpKeyMap()
+endif
