@@ -1,2 +1,7 @@
 *.swp
 *.out
+
+# rust
+target/
+**/*.rs.bk
+*.exe

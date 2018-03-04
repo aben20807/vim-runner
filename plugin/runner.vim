@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-04 17:40:12
+" Last Modified: 2018-03-04 21:50:48
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -58,10 +58,13 @@ call s:InitVariable("g:runner_python_executable", "python3")
 " Section: compile options settings
 call s:InitVariable("g:runner_c_compile_options", "-std=c11 -Wall")
 call s:InitVariable("g:runner_cpp_compile_options", "-std=c++14 -Wall")
+call s:InitVariable("g:runner_rust_compile_options", "")
 
 " Section: run options settings
-call s:InitVariable("g:runner_c_run_options", "< test.in > test.out")
-call s:InitVariable("g:runner_cpp_run_options", "< test.in")
+call s:InitVariable("g:runner_c_run_options", "")
+call s:InitVariable("g:runner_cpp_run_options", "")
+call s:InitVariable("g:runner_rust_run_backtrace", 1)
+call s:InitVariable("g:runner_rust_run_options", "")
 
 
 augroup comment
@@ -75,6 +78,17 @@ augroup END
 "   -filetype
 function! s:SetUpFiletype(filetype)
     let b:ft = a:filetype
+    if b:ft ==# 'rust'
+        let l:current_dir = getcwd()
+        if filereadable(current_dir . "/../Cargo.toml") ||
+                    \ filereadable(current_dir . "/Cargo.toml")
+            let g:runner_rust_executable = "cargo"
+        else
+            let g:runner_rust_executable = "rustc"
+        endif
+        let b:supported = 1
+        return
+    endif
     let l:support_language = ['c', 'cpp', 'rust', 'python', 'markdown']
     for l:i in l:support_language
         if l:i ==# b:ft
@@ -166,6 +180,14 @@ function! s:Compile()
                     \ ".out"
     elseif b:ft ==# 'rust'
         call s:ShowInfo("rust")
+        if g:runner_rust_executable ==# "rustc"
+            silent execute "!" . g:runner_rust_executable . " " .
+                        \ g:runner_rust_compile_options .
+                        \ " % -o " .
+                        \ b:tmp_dir .
+                        \ b:tmp_name .
+                        \ ".out"
+        endif
     elseif b:ft ==# 'python'
         call s:ShowInfo("python")
     endif
@@ -189,13 +211,32 @@ function! s:Run()
     elseif b:ft ==# 'cpp'
         call s:ShowInfo("cpp")
         execute "!" .
-                    \ l:time . " "
+                    \ l:time . " " .
                     \ b:tmp_dir .
                     \ b:tmp_name .
                     \ ".out" .
                     \ g:runner_cpp_run_options
     elseif b:ft ==# 'rust'
         call s:ShowInfo("rust")
+        if g:runner_rust_run_backtrace
+            let l:rust_bt = "RUST_BACKTRACE=1"
+        else
+            let l:rust_bt = ""
+        endif
+        if g:runner_rust_executable ==# "rustc"
+            execute "!" .
+                        \ l:time . " " .
+                        \ l:rust_bt . " " .
+                        \ b:tmp_dir .
+                        \ b:tmp_name .
+                        \ ".out " .
+                        \ g:runner_rust_run_options
+        else
+            execute "!" .
+                        \ l:time . " " .
+                        \ l:rust_bt . " " .
+                        \ "cargo run"
+        endif
     elseif b:ft ==# 'python'
         call s:ShowInfo("python")
         execute "!" .
