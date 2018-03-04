@@ -1,0 +1,68 @@
+*runner.txt*   easily compile and run code.
+*runner* *vim-runner*
+
+                      ____ _   _ ____  ____  _____  ____                     ~
+                     / ___| | | |  _ \|  _ \| ___ |/ ___)                    ~
+                    | |   | |_| | | | | | | | ____| |                        ~
+                    |_|   |____/|_| |_|_| |_|_____|_|                        ~
+                                                                             ~
+      A simple Vim plugin which uses <F5> to compile and run code.
+
+==============================================================================
+CONTENTS                                                  *runner-contents*
+ 1. Usage ..................................................... |runner_usage|
+ 2. Mappings ............................................... |runner_mappings|
+  2.1 runner_run_key .................................. |mapping_runner_n_key|
+ 3. Configuration ..................................... |runner_configuration|
+  3.1  g:runner_use_default_mapping ...... |config_runner_use_default_mapping|
+  3.2  g:runner_is_save_first .................. |config_runner_is_save_first|
+  3.3  g:runner_print_timestamp .............. |config_runner_print_timestamp|
+  3.4  g:runner_print_time_usage ............ |config_runner_print_time_usage|
+  3.5  g:runner_show_info .......................... |config_runner_show_info|
+  3.6  g:runner_auto_remove_tmp .............. |config_runner_auto_remove_tmp|
+  3.7  g:runner_run_key .............................. |config_runner_run_key|
+  3.8  g:runner_tmp_dir .............................. |config_runner_tmp_dir|
+  3.9  g:runner_is_with_ale ...................... |config_runner_is_with_ale|
+  3.10 g:runner_is_with_md ........................ |config_runner_is_with_md|
+  3.11 g:runner_c_executable .................... |config_runner_c_executable|
+  3.12 g:runner_cpp_executable ................ |config_runner_cpp_executable|
+  3.13 g:runner_rust_executable .............. |config_runner_rust_executable|
+  3.14 g:runner_python_executable .......... |config_runner_python_executable|
+  3.15 g:runner_c_compile_options .......... |config_runner_c_compile_options|
+  3.16 g:runner_cpp_compile_options ...... |config_runner_cpp_compile_options|
+  3.17 g:runner_rust_compile_options .... |config_runner_rust_compile_options|
+  3.18 g:runner_c_run_options .................. |config_runner_c_run_options|
+  3.19 g:runner_cpp_run_options .............. |config_runner_cpp_run_options|
+  3.20 g:runner_rust_run_backtrace ........ |config_runner_rust_run_backtrace|
+  3.21 g:runner_rust_run_options ............ |config_runner_rust_run_options|
+ 4. License ................................................. |runner_license|
+ 5. Bugs ....................................................... |runner_bugs|
+
+==============================================================================
+1. Usage                                                       *runner_usage*
+2. Mappings                                                 *runner_mappings*
+2.1 runner_run_key                                      mapping_runner_n_key*
+3. Configuration                                       *runner_configuration*
+3.1  g:runner_use_default_mapping         *config_runner_use_default_mapping*
+3.2  g:runner_is_save_first                     *config_runner_is_save_first*
+3.3  g:runner_print_timestamp                 *config_runner_print_timestamp*
+3.4  g:runner_print_time_usage               *config_runner_print_time_usage*
+3.5  g:runner_show_info                             *config_runner_show_info*
+3.6  g:runner_auto_remove_tmp                 *config_runner_auto_remove_tmp*
+3.7  g:runner_run_key                                 *config_runner_run_key*
+3.8  g:runner_tmp_dir                                 *config_runner_tmp_dir*
+3.9  g:runner_is_with_ale                         *config_runner_is_with_ale*
+3.10 g:runner_is_with_md                           *config_runner_is_with_md*
+3.11 g:runner_c_executable                       *config_runner_c_executable*
+3.12 g:runner_cpp_executable                   *config_runner_cpp_executable*
+3.13 g:runner_rust_executable                 *config_runner_rust_executable*
+3.14 g:runner_python_executable             *config_runner_python_executable*
+3.15 g:runner_c_compile_options             *config_runner_c_compile_options*
+3.16 g:runner_cpp_compile_options         *config_runner_cpp_compile_options*
+3.17 g:runner_rust_compile_options       *config_runner_rust_compile_options*
+3.18 g:runner_c_run_options                     *config_runner_c_run_options*
+3.19 g:runner_cpp_run_options                 *config_runner_cpp_run_options*
+3.20 g:runner_rust_run_backtrace           *config_runner_rust_run_backtrace*
+3.21 g:runner_rust_run_options               *config_runner_rust_run_options*
+4. License                                                   *runner_license*
+5. Bugs                                                         *runner_bugs*
