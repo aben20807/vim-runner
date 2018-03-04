@@ -22,7 +22,6 @@ set shellcmdflag=-c
 " Args:
 "   -var: the name of the var to be initialised
 "   -value: the value to initialise var to
-"
 " Returns:
 "   1 if the var is set, 0 otherwise
 function! s:InitVariable(var, value)
@@ -102,7 +101,6 @@ endfunction
 
 " Function: s:ShowInfo(str) function
 " Use to print info string.
-"
 " Args:
 "   -str: string need to print.
 function! s:ShowInfo(str)
@@ -117,6 +115,8 @@ function! s:ShowInfo(str)
 endfunction
 
 
+" Function: s:InitTmpDir() function
+" Initialize temporary directory for products after compiling.
 " Ref: http://vim.wikia.com/wiki/Automatically_create_tmp_or_backup_directories
 function! s:InitTmpDir()
     let b:tmp_dir = g:runner_tmp_dir
@@ -126,6 +126,8 @@ function! s:InitTmpDir()
 endfunction
 
 
+" Function: s:DoAll() function
+" To do all subfunctions.
 function! s:DoAll()
     if b:supported
         call s:Before()
@@ -138,6 +140,8 @@ function! s:DoAll()
 endfunction
 
 
+" Function: s:Before() function
+" To do something before compiling.
 function! s:Before()
     call s:InitTmpDir()
     if g:runner_is_save_first
@@ -160,6 +164,8 @@ function! s:Before()
 endfunction
 
 
+" Function: s:Compile() function
+" To do something when compiling.
 function! s:Compile()
     let b:tmp_name = strftime("%s")
     if b:ft ==# 'c'
@@ -194,6 +200,8 @@ function! s:Compile()
 endfunction
 
 
+" Function: s:Run() function
+" To do something when running.
 function! s:Run()
     if g:runner_print_time_usage
         let l:time = "time"
@@ -255,6 +263,8 @@ function! s:Run()
 endfunction
 
 
+" Function: s:After() function
+" To do something after running.
 function! s:After()
     if (b:ft ==# 'c' || b:ft ==# 'cpp') && g:runner_auto_remove_tmp
         silent execute "!rm " .
