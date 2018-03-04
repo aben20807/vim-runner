@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-04 12:48:42
+" Last Modified: 2018-03-04 13:31:00
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -69,6 +69,14 @@ augroup END
 "   -filetype
 function! s:SetUpFiletype(filetype)
     let b:ft = a:filetype
+    let l:support_language = ['c', 'cpp', 'rust', 'python', 'markdown']
+    for l:i in l:support_language
+        if l:i ==# b:ft
+            let b:supported = 1
+            return
+        endif
+    endfor
+    let b:supported = 0
 endfunction
 
 " Function: s:ShowInfo(str) function
@@ -96,10 +104,12 @@ function s:InitTmpDir()
 endfunction
 
 function! DoAll()
-    call s:Before()
-    call s:Compile()
-    call s:Run()
-    call s:After()
+    if b:supported
+        call s:Before()
+        call s:Compile()
+        call s:Run()
+        call s:After()
+    endif
 endfunction
 
 function! s:Before()
