@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-04 13:40:24
+" Last Modified: 2018-03-04 17:40:12
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -56,8 +56,12 @@ call s:InitVariable("g:runner_rust_executable", "cargo")
 call s:InitVariable("g:runner_python_executable", "python3")
 
 " Section: compile options settings
-call s:InitVariable("g:runner_c_options", "-std=c11 -Wall")
-call s:InitVariable("g:runner_cpp_options", "-std=c++14 -Wall")
+call s:InitVariable("g:runner_c_compile_options", "-std=c11 -Wall")
+call s:InitVariable("g:runner_cpp_compile_options", "-std=c++14 -Wall")
+
+" Section: run options settings
+call s:InitVariable("g:runner_c_run_options", "< test.in > test.out")
+call s:InitVariable("g:runner_cpp_run_options", "< test.in")
 
 
 augroup comment
@@ -132,7 +136,7 @@ function! s:Before()
     if g:runner_print_timestamp && b:ft !=# 'markdown'
         let l:date = strftime("%Y-%m-%d_%T")
         silent execute "!echo -e '\033[31m' "
-        silent execute '!printf "<<<< \%s >>>>" ' . l:date
+        silent execute '!printf "<<<< \%s >>>>\n" ' . l:date
         silent execute "!echo -en '\033[0m'"
         if b:ft !=# 'c' && b:ft !=# 'cpp' && b:ft !=# 'rust'
                     \ && b:ft !=# 'python'
@@ -147,7 +151,7 @@ function! s:Compile()
     if b:ft ==# 'c'
         call s:ShowInfo(b:tmp_name)
         silent execute "!" . g:runner_c_executable . " " .
-                    \ g:runner_c_options .
+                    \ g:runner_c_compile_options .
                     \ " % -o " .
                     \ b:tmp_dir .
                     \ b:tmp_name .
@@ -155,7 +159,7 @@ function! s:Compile()
     elseif b:ft ==# 'cpp'
         call s:ShowInfo("cpp")
         silent execute "!" . g:runner_cpp_executable . " " .
-                    \ g:runner_cpp_options .
+                    \ g:runner_cpp_compile_options .
                     \ " % -o " .
                     \ b:tmp_dir .
                     \ b:tmp_name .
@@ -180,14 +184,16 @@ function! s:Run()
                     \ l:time . " "
                     \ b:tmp_dir .
                     \ b:tmp_name .
-                    \ ".out"
+                    \ ".out " .
+                    \ g:runner_c_run_options
     elseif b:ft ==# 'cpp'
         call s:ShowInfo("cpp")
         execute "!" .
                     \ l:time . " "
                     \ b:tmp_dir .
                     \ b:tmp_name .
-                    \ ".out"
+                    \ ".out" .
+                    \ g:runner_cpp_run_options
     elseif b:ft ==# 'rust'
         call s:ShowInfo("rust")
     elseif b:ft ==# 'python'
