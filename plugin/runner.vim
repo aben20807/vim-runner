@@ -1,7 +1,16 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-03 23:53:24
+" Last Modified: 2018-03-04 12:08:33
 " Vim: enc=utf-8
+
+if exists("has_loaded_runner")
+    finish
+endif
+if v:version < 700
+    echoerr "Runner: this plugin requires vim >= 7."
+    finish
+endif
+let has_loaded_runner = 1
 
 " Function: s:InitVariable() function
 " 初始化變數
@@ -26,7 +35,9 @@ call s:InitVariable("g:runner_is_save_first", 1)
 call s:InitVariable("g:runner_print_timestamp", 1)
 call s:InitVariable("g:runner_print_time_usage", 1)
 call s:InitVariable("g:runner_show_info", 1)
+call s:InitVariable("g:runner_auto_remove_tmp", 0)
 call s:InitVariable("g:runner_run_key", "<F5>")
+call s:InitVariable("g:runner_tmp_dir", "/tmp/vim-runner/")
 
 " Section: work with other plugins
 " w0rp/ale
@@ -75,7 +86,7 @@ endfunction
 
 " Ref: http://vim.wikia.com/wiki/Automatically_create_tmp_or_backup_directories
 function s:InitTmpDir()
-    let b:tmp_dir = '/tmp/vim-runner/'
+    let b:tmp_dir = g:runner_tmp_dir
     if !isdirectory(b:tmp_dir)
         call mkdir(b:tmp_dir)
     endif
@@ -165,6 +176,12 @@ function! s:Run()
 endfunction
 
 function! s:After()
+    if (b:ft ==# 'c' || b:ft ==# 'cpp') && g:runner_auto_remove_tmp
+        silent execute "!rm " .
+                    \ b:tmp_dir .
+                    \ b:tmp_name .
+                    \ ".out"
+    endif
     if g:runner_is_with_ale
         let g:ale_enabled = b:runner_ale_status
     endif
