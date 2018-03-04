@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-04 12:22:22
+" Last Modified: 2018-03-04 12:48:42
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -11,6 +11,9 @@ if v:version < 700
     finish
 endif
 let has_loaded_runner = 1
+
+set shell=/bin/sh
+set shellcmdflag=-c
 
 " Function: s:InitVariable() function
 " 初始化變數
@@ -109,9 +112,10 @@ function! s:Before()
         let g:ale_enabled = 0
     endif
     if g:runner_print_timestamp && b:ft !=# 'markdown'
+        let l:date = strftime("%Y-%m-%d_%T")
         silent execute "!echo -e '\033[31m' "
-        silent execute '!printf "\%35s" "$(date)"'
-        silent execute "!echo -e '\033[0m'"
+        silent execute '!printf "<<<< \%s >>>>" ' . l:date
+        silent execute "!echo -en '\033[0m'"
         if b:ft !=# 'c' && b:ft !=# 'cpp' && b:ft !=# 'rust'
                     \ && b:ft !=# 'python'
             execute "!echo -e ''"
