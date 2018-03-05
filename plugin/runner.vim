@@ -88,13 +88,15 @@ function! s:SetUpFiletype(filetype)
         let b:supported = 1
         return
     endif
-    let l:support_language = ['c', 'cpp', 'rust', 'python', 'markdown']
-    for l:i in l:support_language
-        if l:i ==# b:ft
-            let b:supported = 1
-            return
-        endif
-    endfor
+    if b:ft ==# 'markdown' && g:runner_is_with_md
+        call s:ShowInfo(g:runner_is_with_md)
+        let b:supported = 1
+        return
+    endif
+    if b:ft ==# 'c' || b:ft ==# 'cpp' || b:ft ==# 'python'
+        let b:supported = 1
+        return
+    endif
     let b:supported = 0
 endfunction
 
