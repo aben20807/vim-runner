@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-04 21:50:48
+" Last Modified: 2018-03-05 16:32:48
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -169,7 +169,6 @@ endfunction
 function! s:Compile()
     let b:tmp_name = strftime("%s")
     if b:ft ==# 'c'
-        call s:ShowInfo(b:tmp_name)
         silent execute "!" . g:runner_c_executable . " " .
                     \ g:runner_c_compile_options .
                     \ " % -o " .
@@ -177,7 +176,6 @@ function! s:Compile()
                     \ b:tmp_name .
                     \ ".out"
     elseif b:ft ==# 'cpp'
-        call s:ShowInfo("cpp")
         silent execute "!" . g:runner_cpp_executable . " " .
                     \ g:runner_cpp_compile_options .
                     \ " % -o " .
@@ -185,7 +183,6 @@ function! s:Compile()
                     \ b:tmp_name .
                     \ ".out"
     elseif b:ft ==# 'rust'
-        call s:ShowInfo("rust")
         if g:runner_rust_executable ==# "rustc"
             silent execute "!" . g:runner_rust_executable . " " .
                         \ g:runner_rust_compile_options .
@@ -195,7 +192,6 @@ function! s:Compile()
                         \ ".out"
         endif
     elseif b:ft ==# 'python'
-        call s:ShowInfo("python")
     endif
 endfunction
 
@@ -209,7 +205,6 @@ function! s:Run()
         let l:time = ""
     endif
     if b:ft ==# 'c'
-        call s:ShowInfo("c")
         execute "!" .
                     \ l:time . " "
                     \ b:tmp_dir .
@@ -217,7 +212,6 @@ function! s:Run()
                     \ ".out " .
                     \ g:runner_c_run_options
     elseif b:ft ==# 'cpp'
-        call s:ShowInfo("cpp")
         execute "!" .
                     \ l:time . " " .
                     \ b:tmp_dir .
@@ -225,7 +219,6 @@ function! s:Run()
                     \ ".out" .
                     \ g:runner_cpp_run_options
     elseif b:ft ==# 'rust'
-        call s:ShowInfo("rust")
         if g:runner_rust_run_backtrace
             let l:rust_bt = "RUST_BACKTRACE=1"
         else
@@ -246,7 +239,6 @@ function! s:Run()
                         \ "cargo run"
         endif
     elseif b:ft ==# 'python'
-        call s:ShowInfo("python")
         execute "!" .
                     \ l:time . " "
                     \ g:runner_python_executable .
