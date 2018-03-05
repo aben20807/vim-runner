@@ -1,5 +1,7 @@
 # Runner
 
+![gif](https://i.imgur.com/pNHboxG.gif)
+
 ## 1. Installation
 
 ### 1.a. Installation with [Vim-Plug](https://github.com/junegunn/vim-plug)
