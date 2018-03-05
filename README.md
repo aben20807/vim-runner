@@ -1,6 +1,6 @@
 # Runner
 
-![gif](https://i.imgur.com/pNHboxG.gif)
+![gif](https://imgur.com/pNHboxG.gif)
 
 ## 1. Installation
 
