@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-03-05 16:32:48
+" Last Modified: 2018-03-15 11:21:53
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -89,7 +89,6 @@ function! s:SetUpFiletype(filetype)
         return
     endif
     if b:ft ==# 'markdown' && g:runner_is_with_md
-        call s:ShowInfo(g:runner_is_with_md)
         let b:supported = 1
         return
     endif
