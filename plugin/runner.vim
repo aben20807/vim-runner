@@ -159,7 +159,7 @@ function! s:Before()
         silent execute '!printf "<<<< \%s >>>>\n" ' . l:date
         silent execute "!echo -en '\033[0m'"
         if b:ft !=# 'c' && b:ft !=# 'cpp' && b:ft !=# 'rust'
-                    \ && b:ft !=# 'python'
+                    \ && b:ft !=# 'python' && b:ft !=# 'lisp'
             execute "!echo -e ''"
         endif
     endif
@@ -194,6 +194,7 @@ function! s:Compile()
                         \ ".out"
         endif
     elseif b:ft ==# 'python'
+    elseif b:ft ==# 'lisp'
     endif
 endfunction
 
