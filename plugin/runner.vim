@@ -53,6 +53,7 @@ call s:InitVariable("g:runner_c_executable", "gcc")
 call s:InitVariable("g:runner_cpp_executable", "g++")
 call s:InitVariable("g:runner_rust_executable", "cargo")
 call s:InitVariable("g:runner_python_executable", "python3")
+call s:InitVariable("g:runner_lisp_executable", "sbcl --script")
 
 " Section: compile options settings
 call s:InitVariable("g:runner_c_compile_options", "-std=c11 -Wall")
@@ -92,7 +93,7 @@ function! s:SetUpFiletype(filetype)
         let b:supported = 1
         return
     endif
-    if b:ft ==# 'c' || b:ft ==# 'cpp' || b:ft ==# 'python'
+    if b:ft ==# 'c' || b:ft ==# 'cpp' || b:ft ==# 'python' || b:ft == 'lisp'
         let b:supported = 1
         return
     endif
@@ -243,6 +244,11 @@ function! s:Run()
         execute "!" .
                     \ l:time . " "
                     \ g:runner_python_executable .
+                    \ " %"
+    elseif b:ft ==# 'lisp'
+        execute "!" .
+                    \ l:time . " "
+                    \ g:runner_lisp_executable .
                     \ " %"
     elseif b:ft ==# 'markdown'
         " markdown preview
