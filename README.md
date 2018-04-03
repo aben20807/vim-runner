@@ -17,7 +17,7 @@
 ## 2. Usage
 
 ### 2.a. Supported Languages
-+ C, C++, Python, Rust, Markdown.
++ C, C++, Python, Rust, Markdown, Lisp.
 
 ### 2.b. Settings
 

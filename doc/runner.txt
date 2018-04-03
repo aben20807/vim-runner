@@ -28,13 +28,14 @@ CONTENTS                                                  *runner-contents*
   3.12 g:runner_cpp_executable ................ |config_runner_cpp_executable|
   3.13 g:runner_rust_executable .............. |config_runner_rust_executable|
   3.14 g:runner_python_executable .......... |config_runner_python_executable|
-  3.15 g:runner_c_compile_options .......... |config_runner_c_compile_options|
-  3.16 g:runner_cpp_compile_options ...... |config_runner_cpp_compile_options|
-  3.17 g:runner_rust_compile_options .... |config_runner_rust_compile_options|
-  3.18 g:runner_c_run_options .................. |config_runner_c_run_options|
-  3.19 g:runner_cpp_run_options .............. |config_runner_cpp_run_options|
-  3.20 g:runner_rust_run_backtrace ........ |config_runner_rust_run_backtrace|
-  3.21 g:runner_rust_run_options ............ |config_runner_rust_run_options|
+  3.15 g:runner_lisp_executable .............. |config_runner_lisp_executable|
+  3.16 g:runner_c_compile_options .......... |config_runner_c_compile_options|
+  3.17 g:runner_cpp_compile_options ...... |config_runner_cpp_compile_options|
+  3.18 g:runner_rust_compile_options .... |config_runner_rust_compile_options|
+  3.19 g:runner_c_run_options .................. |config_runner_c_run_options|
+  3.20 g:runner_cpp_run_options .............. |config_runner_cpp_run_options|
+  3.21 g:runner_rust_run_backtrace ........ |config_runner_rust_run_backtrace|
+  3.22 g:runner_rust_run_options ............ |config_runner_rust_run_options|
  4. License ................................................. |runner_license|
  5. Bugs ....................................................... |runner_bugs|
 
@@ -44,7 +45,8 @@ CONTENTS                                                  *runner-contents*
 I just lazy that want to use a key to compile and run a code without leaving
 vim like some IDEs. Therefore, I write this plugin that allow you to just
 press <F5> and it will compile and run code.
-Now this plugin support c, cpp, rust, python, markdown(need other plugin).
+Now this plugin support c, cpp, rust, python, lisp,
+markdown(need other plugin).
 
 ==============================================================================
 2. Mappings                                                 *runner_mappings*
@@ -195,7 +197,16 @@ Set python interpreter's path. >
 Default: "python3"
 
 ------------------------------------------------------------------------------
-3.15 g:runner_c_compile_options             *config_runner_c_compile_options*
+3.15 g:runner_lisp_executable                 *config_runner_lisp_executable*
+
+Set lisp interpreter's path. >
+    let g:runner_lisp_executable = "sbcl --script"
+<
+
+Default: "sbcl --script"
+
+------------------------------------------------------------------------------
+3.16 g:runner_c_compile_options             *config_runner_c_compile_options*
 
 Set c compile options for gnu99. >
     let g:runner_c_compile_options = "-std=gnu99 -Wall"
@@ -204,7 +215,7 @@ Set c compile options for gnu99. >
 Default: "-std=c11 -Wall"
 
 ------------------------------------------------------------------------------
-3.16 g:runner_cpp_compile_options         *config_runner_cpp_compile_options*
+3.17 g:runner_cpp_compile_options         *config_runner_cpp_compile_options*
 
 Set cpp compile options for gnu99. >
     let g:runner_cpp_compile_options = "-std=c++11 -Wall -lm -lcrypt -O2 -pipe"
@@ -213,12 +224,12 @@ Set cpp compile options for gnu99. >
 Default: "-std=c++14 -Wall"
 
 ------------------------------------------------------------------------------
-3.17 g:runner_rust_compile_options       *config_runner_rust_compile_options*
+3.18 g:runner_rust_compile_options       *config_runner_rust_compile_options*
 
 Default: ""
 
 ------------------------------------------------------------------------------
-3.18 g:runner_c_run_options                     *config_runner_c_run_options*
+3.19 g:runner_c_run_options                     *config_runner_c_run_options*
 
 Set run options for redirection. >
     let g:runner_c_run_options = "< test.in > test.out"
@@ -227,7 +238,7 @@ Set run options for redirection. >
 Default: ""
 
 ------------------------------------------------------------------------------
-3.19 g:runner_cpp_run_options                 *config_runner_cpp_run_options*
+3.20 g:runner_cpp_run_options                 *config_runner_cpp_run_options*
 
 Set run options for redirection. >
     let g:runner_cpp_run_options = "< test.in > test.out"
@@ -236,7 +247,7 @@ Set run options for redirection. >
 Default: ""
 
 ------------------------------------------------------------------------------
-3.20 g:runner_rust_run_backtrace           *config_runner_rust_run_backtrace*
+3.21 g:runner_rust_run_backtrace           *config_runner_rust_run_backtrace*
 
 Set not to print backtrace when rust run in error. >
     let g:runner_rust_run_backtrace = 0
@@ -245,7 +256,7 @@ Set not to print backtrace when rust run in error. >
 Default: 1 (Enable to print backtrace)
 
 ------------------------------------------------------------------------------
-3.21 g:runner_rust_run_options               *config_runner_rust_run_options*
+3.22 g:runner_rust_run_options               *config_runner_rust_run_options*
 
 Set run options for redirection. >
     let g:runner_rust_run_options = "< test.in > test.out"
