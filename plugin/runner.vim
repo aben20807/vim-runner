@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-04-05 18:09:46
+" Last Modified: 2018-04-16 17:41:45
 " Vim: enc=utf-8
 
 if exists("has_loaded_runner")
@@ -52,6 +52,7 @@ call runner#InitVariable("g:runner_rust_run_options", "")
 
 
 augroup comment
+    autocmd BufEnter,BufRead,BufNewFile * call runner#SetUpOS()
     autocmd BufEnter,BufRead,BufNewFile * call runner#SetUpFiletype(&filetype)
 augroup END
 

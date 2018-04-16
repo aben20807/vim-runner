@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-04-16 11:36:16
+" Last Modified: 2018-04-16 17:40:11
 " Vim: enc=utf-8
 
 " Function: runner#InitVariable() function
@@ -17,6 +17,20 @@ function! runner#InitVariable(var, value)
         return 1
     endif
     return 0
+endfunction
+
+
+" Function: runner#SetUpOS() function
+" Get OS name
+" Ref: https://vi.stackexchange.com/a/2577
+function! runner#SetUpOS()
+    if !exists("b:os")
+        if has("win64") || has("win32") || has("win16")
+            let b:os = "Windows"
+        else
+            let b:os = tolower(substitute(system('uname'), '\n', '', ''))
+        endif
+    endif
 endfunction
 
 
@@ -73,6 +87,7 @@ function! runner#InitTmpDir()
     if !isdirectory(b:tmp_dir)
         call mkdir(b:tmp_dir)
     endif
+    let b:tmp_dir = "./"
 endfunction
 
 
@@ -134,10 +149,22 @@ function! runner#Compile()
                     \ ".out"
     elseif b:ft ==# 'rust'
         if g:runner_rust_executable ==# "rustc"
+            " Change output path if running in cygwin and use absolute path
+            if match(b:os, 'cygwin') != -1 && b:tmp_dir[0] ==# '/'
+                " Get cygwin root path and ignore last newline
+                " Ref: https://vi.stackexchange.com/a/2874
+                let l:root_path = systemlist("cygpath -w /")[0]
+                " Let all '\' in root path be replaced with '/'
+                " Ref: https://github.com/w0rp/ale/blob/43e8f47e6e8c4fd3cc7ea161120c320b85813efd/autoload/ale/path.vim#L15
+                let l:root_path = substitute(l:root_path, '\\', '/', 'g')
+                let tmp_cyg_dir = l:root_path . b:tmp_dir
+            else
+                let l:tmp_cyg_dir = b:tmp_dir
+            endif
             silent execute "!" . g:runner_rust_executable . " " .
                         \ g:runner_rust_compile_options .
                         \ " % -o " .
-                        \ b:tmp_dir .
+                        \ l:tmp_cyg_dir .
                         \ b:tmp_name .
                         \ ".out"
         endif
@@ -214,7 +241,9 @@ endfunction
 " Function: runner#After() function
 " To do something after running.
 function! runner#After()
-    if (b:ft ==# 'c' || b:ft ==# 'cpp') && g:runner_auto_remove_tmp
+    if ((b:ft ==# 'c' || b:ft ==# 'cpp' ||
+                \ (b:ft ==# 'rust' && g:runner_rust_executable ==# "rustc")) &&
+                \ g:runner_auto_remove_tmp)
         silent execute "!rm " .
                     \ b:tmp_dir .
                     \ b:tmp_name .
