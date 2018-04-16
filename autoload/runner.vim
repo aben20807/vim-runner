@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-04-16 17:40:11
+" Last Modified: 2018-04-16 17:44:32
 " Vim: enc=utf-8
 
 " Function: runner#InitVariable() function
@@ -11,7 +11,7 @@
 "   -value: the value to initialise var to
 " Returns:
 "   1 if the var is set, 0 otherwise
-function! runner#InitVariable(var, value)
+function! runner#InitVariable(var, value) abort
     if !exists(a:var)
         execute 'let ' . a:var . ' = ' . "'" . a:value . "'"
         return 1
@@ -23,7 +23,7 @@ endfunction
 " Function: runner#SetUpOS() function
 " Get OS name
 " Ref: https://vi.stackexchange.com/a/2577
-function! runner#SetUpOS()
+function! runner#SetUpOS() abort
     if !exists("b:os")
         if has("win64") || has("win32") || has("win16")
             let b:os = "Windows"
@@ -38,7 +38,7 @@ endfunction
 " Set up filetype.
 " Args:
 "   -filetype
-function! runner#SetUpFiletype(filetype)
+function! runner#SetUpFiletype(filetype) abort
     let b:ft = a:filetype
     if b:ft ==# 'rust'
         let l:current_dir = getcwd()
@@ -67,7 +67,7 @@ endfunction
 " Use to print info string.
 " Args:
 "   -str: string need to print.
-function! runner#ShowInfo(str)
+function! runner#ShowInfo(str) abort
     if g:runner_show_info
         redraw
         echohl WarningMsg
@@ -82,7 +82,7 @@ endfunction
 " Function: runner#InitTmpDir() function
 " Initialize temporary directory for products after compiling.
 " Ref: http://vim.wikia.com/wiki/Automatically_create_tmp_or_backup_directories
-function! runner#InitTmpDir()
+function! runner#InitTmpDir() abort
     let b:tmp_dir = g:runner_tmp_dir
     if !isdirectory(b:tmp_dir)
         call mkdir(b:tmp_dir)
@@ -93,7 +93,7 @@ endfunction
 
 " Function: runner#DoAll() function
 " To do all subfunctions.
-function! runner#DoAll()
+function! runner#DoAll() abort
     if b:supported
         call runner#Before()
         call runner#Compile()
@@ -107,7 +107,7 @@ endfunction
 
 " Function: runner#Before() function
 " To do something before compiling.
-function! runner#Before()
+function! runner#Before() abort
     call runner#InitTmpDir()
     if g:runner_is_save_first
         execute "up"
@@ -131,7 +131,7 @@ endfunction
 
 " Function: runner#Compile() function
 " To do something when compiling.
-function! runner#Compile()
+function! runner#Compile() abort
     let b:tmp_name = strftime("%s")
     if b:ft ==# 'c'
         silent execute "!" . g:runner_c_executable . " " .
@@ -176,7 +176,7 @@ endfunction
 
 " Function: runner#Run() function
 " To do something when running.
-function! runner#Run()
+function! runner#Run() abort
     if g:runner_print_time_usage
         let l:time = "time"
     else
@@ -240,7 +240,7 @@ endfunction
 
 " Function: runner#After() function
 " To do something after running.
-function! runner#After()
+function! runner#After() abort
     if ((b:ft ==# 'c' || b:ft ==# 'cpp' ||
                 \ (b:ft ==# 'rust' && g:runner_rust_executable ==# "rustc")) &&
                 \ g:runner_auto_remove_tmp)
