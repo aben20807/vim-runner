@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-04-05 18:09:35
+" Last Modified: 2018-04-16 11:36:16
 " Vim: enc=utf-8
 
 " Function: runner#InitVariable() function
@@ -107,7 +107,7 @@ function! runner#Before()
         silent execute '!printf "<<<< \%s \%s >>>>\n" ' .
                     \l:date . " " . expand('%:t')
         silent execute "!echo -en '\033[0m'"
-        if b:supported = 0
+        if b:supported == 0
             execute "!echo -e ''"
         endif
     endif
