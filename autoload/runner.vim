@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-04-16 17:44:32
+" Last Modified: 2018-04-29 11:43:56
 " Vim: enc=utf-8
 
 " Function: runner#InitVariable() function
@@ -87,7 +87,6 @@ function! runner#InitTmpDir() abort
     if !isdirectory(b:tmp_dir)
         call mkdir(b:tmp_dir)
     endif
-    let b:tmp_dir = "./"
 endfunction
 
 
