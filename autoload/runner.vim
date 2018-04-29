@@ -156,14 +156,14 @@ function! runner#Compile() abort
                 " Let all '\' in root path be replaced with '/'
                 " Ref: https://github.com/w0rp/ale/blob/43e8f47e6e8c4fd3cc7ea161120c320b85813efd/autoload/ale/path.vim#L15
                 let l:root_path = substitute(l:root_path, '\\', '/', 'g')
-                let tmp_cyg_dir = l:root_path . b:tmp_dir
+                let b:tmp_cyg_dir = l:root_path . b:tmp_dir
             else
-                let l:tmp_cyg_dir = b:tmp_dir
+                let b:tmp_cyg_dir = b:tmp_dir
             endif
             silent execute "!" . g:runner_rust_executable . " " .
                         \ g:runner_rust_compile_options .
                         \ " % -o " .
-                        \ l:tmp_cyg_dir .
+                        \ b:tmp_cyg_dir .
                         \ b:tmp_name .
                         \ ".out"
         endif
@@ -240,8 +240,15 @@ endfunction
 " Function: runner#After() function
 " To do something after running.
 function! runner#After() abort
-    if ((b:ft ==# 'c' || b:ft ==# 'cpp' ||
-                \ (b:ft ==# 'rust' && g:runner_rust_executable ==# "rustc")) &&
+    if (b:ft ==# 'rust' && g:runner_rust_executable ==# 'rustc' &&
+                \ match(b:os, 'cygwin') != -1 && b:tmp_dir[0] ==# '/' &&
+                \ g:runner_auto_remove_tmp)
+        silent execute "!rm " .
+                    \ b:tmp_cyg_dir .
+                    \ b:tmp_name .
+                    \ ".out"
+    elseif ((b:ft ==# 'c' || b:ft ==# 'cpp' ||
+                \ (b:ft ==# 'rust' && g:runner_rust_executable ==# 'rustc')) &&
                 \ g:runner_auto_remove_tmp)
         silent execute "!rm " .
                     \ b:tmp_dir .
