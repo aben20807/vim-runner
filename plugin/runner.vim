@@ -41,7 +41,7 @@ call runner#InitVariable("g:runner_lisp_executable", "sbcl --script")
 
 " Section: compile options settings
 call runner#InitVariable("g:runner_c_compile_options", "-std=c11 -Wall")
-call runner#InitVariable("g:runner_cpp_compile_options", "-std=c++14 -Wall")
+call runner#InitVariable("g:runner_cpp_compile_options", "-std=c++11 -Wall")
 call runner#InitVariable("g:runner_rust_compile_options", "")
 
 " Section: run options settings

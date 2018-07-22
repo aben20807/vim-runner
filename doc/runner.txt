@@ -221,7 +221,7 @@ Set cpp compile options for gnu99. >
     let g:runner_cpp_compile_options = "-std=c++11 -Wall -lm -lcrypt -O2 -pipe"
 <
 
-Default: "-std=c++14 -Wall"
+Default: "-std=c++11 -Wall"
 
 ------------------------------------------------------------------------------
 3.18 g:runner_rust_compile_options       *config_runner_rust_compile_options*

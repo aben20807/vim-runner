@@ -61,7 +61,7 @@ let g:runner_python_executable = "python3"
 
 " Section: compile options settings
 let g:runner_c_compile_options = "-std=c11 -Wall"
-let g:runner_cpp_compile_options = "-std=c++14 -Wall"
+let g:runner_cpp_compile_options = "-std=c++11 -Wall"
 let g:runner_rust_compile_options = ""
 
 " Section: run options settings
