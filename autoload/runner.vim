@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-04-29 11:43:56
+" Last Modified: 2018-07-22 16:14:19
 " Vim: enc=utf-8
 
 " Function: runner#InitVariable() function
@@ -117,12 +117,12 @@ function! runner#Before() abort
     endif
     if g:runner_print_timestamp && b:ft !=# 'markdown'
         let l:date = strftime("%Y-%m-%d_%T")
-        silent execute "!echo -e '\033[31m' "
+        silent execute "!printf '\033[31m' "
         silent execute '!printf "<<<< \%s \%s >>>>\n" ' .
                     \l:date . " " . expand('%:t')
-        silent execute "!echo -en '\033[0m'"
+        silent execute "!printf '\033[0m'"
         if b:supported == 0
-            execute "!echo -e ''"
+            execute "!printf ''"
         endif
     endif
 endfunction
