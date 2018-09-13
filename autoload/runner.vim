@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-07-22 16:14:19
+" Last Modified: 2018-09-13 12:01:28
 " Vim: enc=utf-8
 
 " Function: runner#InitVariable() function
@@ -118,7 +118,7 @@ function! runner#Before() abort
     if g:runner_print_timestamp && b:ft !=# 'markdown'
         let l:date = strftime("%Y-%m-%d_%T")
         silent execute "!printf '\033[31m' "
-        silent execute '!printf "<<<< \%s \%s >>>>\n" ' .
+        silent execute '!printf "\n<<<< \%s \%s >>>>\n" ' .
                     \l:date . " " . expand('%:t')
         silent execute "!printf '\033[0m'"
         if b:supported == 0
