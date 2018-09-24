@@ -1,6 +1,6 @@
 " Author: Huang Po-Hsuan <aben20807@gmail.com>
 " Filename: runner.vim
-" Last Modified: 2018-09-13 12:01:28
+" Last Modified: 2018-09-25 07:33:40
 " Vim: enc=utf-8
 
 " Function: runner#InitVariable() function
@@ -177,7 +177,7 @@ endfunction
 " To do something when running.
 function! runner#Run() abort
     if g:runner_print_time_usage
-        let l:time = "time"
+        let l:time = "time -p"
     else
         let l:time = ""
     endif
