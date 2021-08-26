@@ -12,7 +12,7 @@ if v:version < 700
 endif
 let has_loaded_runner = 1
 
-set shell=/bin/sh
+set shell=/bin/bash
 set shellcmdflag=-c
 
 
