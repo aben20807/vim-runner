@@ -94,12 +94,17 @@ endfunction
 " To do all subfunctions.
 function! runner#DoAll() abort
     if b:supported
-        call runner#Before()
-        call runner#Compile()
-        call runner#Run()
-        call runner#After()
+        try
+            call runner#Before()
+            call runner#Compile()
+            call runner#Run()
+            call runner#After()
+        catch /.*/
+            echo "Error: " . v:exception
+            return
+        endtry
     else
-        call runner#ShowInfo("   ❖  不支援  ❖ ")
+        call runner#ShowInfo("   ❖  not supported  ❖ ")
     endif
 endfunction
 
@@ -117,13 +122,9 @@ function! runner#Before() abort
     endif
     if g:runner_print_timestamp && b:ft !=# 'markdown'
         let l:date = strftime("%Y-%m-%d_%T")
-        silent execute "!printf '\033[31m' "
-        silent execute '!printf "\n<<<< \%s \%s >>>>\n" ' .
+        let l:info_msg = 'printf "\n<<<< %s %s >>>>\n" ' .
                     \l:date . " " . expand('%:t')
-        silent execute "!printf '\033[0m'"
-        if b:supported == 0
-            execute "!printf ''"
-        endif
+        echo system(l:info_msg)
     endif
 endfunction
 
@@ -133,19 +134,29 @@ endfunction
 function! runner#Compile() abort
     let b:tmp_name = strftime("%s")
     if b:ft ==# 'c'
-        silent execute "!" . g:runner_c_executable . " " .
-                    \ g:runner_c_compile_options .
-                    \ " % -o " .
+        let l:compile_cmd = g:runner_c_executable . " " .
+                    \ g:runner_c_compile_options . " " .
+                    \ expand('%:t') .
+                    \ " -o " .
                     \ b:tmp_dir .
                     \ b:tmp_name .
                     \ ".out"
+        let l:compile_msg = system(l:compile_cmd)
+        if len(l:compile_msg) != 0
+            throw l:compile_msg
+        endif
     elseif b:ft ==# 'cpp'
-        silent execute "!" . g:runner_cpp_executable . " " .
-                    \ g:runner_cpp_compile_options .
-                    \ " % -o " .
+        let l:compile_cmd = g:runner_cpp_executable . " " .
+                    \ g:runner_cpp_compile_options . " " .
+                    \ expand('%:t') .
+                    \ " -o " .
                     \ b:tmp_dir .
                     \ b:tmp_name .
                     \ ".out"
+        let l:compile_msg = system(l:compile_cmd)
+        if len(l:compile_msg) != 0
+            throw l:compile_msg
+        endif
     elseif b:ft ==# 'rust'
         if g:runner_rust_executable ==# "rustc"
             " Change output path if running in cygwin and use absolute path
