@@ -136,7 +136,7 @@ function! runner#Compile() abort
     if b:ft ==# 'c'
         let l:compile_cmd = g:runner_c_executable . " " .
                     \ g:runner_c_compile_options . " " .
-                    \ expand('%:t') .
+                    \ expand('%:p') .
                     \ " -o " .
                     \ b:tmp_dir .
                     \ b:tmp_name .
@@ -148,7 +148,7 @@ function! runner#Compile() abort
     elseif b:ft ==# 'cpp'
         let l:compile_cmd = g:runner_cpp_executable . " " .
                     \ g:runner_cpp_compile_options . " " .
-                    \ expand('%:t') .
+                    \ expand('%:p') .
                     \ " -o " .
                     \ b:tmp_dir .
                     \ b:tmp_name .
